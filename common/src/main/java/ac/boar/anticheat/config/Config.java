@@ -39,7 +39,7 @@ public final class Config {
     private long maxLatencyWait = 15000L;
     @JsonProperty("max-balance-advantage")
     @JsonSetter(nulls = Nulls.SKIP)
-    private long maxBalanceAdvantage = 2000L;
+    private long maxBalanceAdvantage = 8500L;
     @JsonProperty("debug-mode")
     @JsonSetter(nulls = Nulls.SKIP)
     private boolean debugMode;
