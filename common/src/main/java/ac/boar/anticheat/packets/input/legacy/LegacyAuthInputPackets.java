@@ -11,6 +11,7 @@ import ac.boar.anticheat.prediction.UncertainRunner;
 import ac.boar.anticheat.util.InputUtil;
 import ac.boar.anticheat.util.math.Vec3;
 import ac.boar.mappings.item.Items;
+import org.cloudburstmc.math.vector.Vector2f;
 import org.cloudburstmc.protocol.bedrock.data.Ability;
 import org.cloudburstmc.protocol.bedrock.data.InputMode;
 import org.cloudburstmc.protocol.bedrock.data.PlayerAuthInputData;
@@ -95,7 +96,10 @@ public class LegacyAuthInputPackets {
         player.pitch = packet.getRotation().getX();
 
         player.rotation = packet.getRotation();
-        player.interactRotation = packet.getInteractRotation().clone();
+
+        // doesn't exist before 748, so just use the camera rotation there
+        final Vector2f interactRotation = packet.getInteractRotation();
+        player.interactRotation = interactRotation != null ? interactRotation.clone() : Vector2f.from(player.pitch, player.yaw);
 
         player.inputMode = packet.getInputMode();
 
@@ -131,7 +135,9 @@ public class LegacyAuthInputPackets {
 
         // We rely on the SNEAK_CURRENT_RAW flag for the sneaking state since it is more reliable. However, we still need to account for cases where
         // the player may not be holding the sneak bind but still cannot un-sneak (e.g. - under a slab).
-        final boolean useRawSneakState = player.inputMode.equals(InputMode.MOUSE); // SNEAK_CURRENT_RAW only seems to be applied on KBM (keyboard/mouse) - is this intentional or client bug?
+        // SNEAK_CURRENT_RAW only seems to be applied on KBM (keyboard/mouse) - is this intentional or client bug?
+        // also it's 766+ only, so legacy clients fall back to START_/STOP_SNEAKING
+        final boolean useRawSneakState = player.inputMode.equals(InputMode.MOUSE) && !player.legacyMovementProtocol;
         if (useRawSneakState) {
             final boolean wasSneaking = player.getFlagTracker().has(EntityFlag.SNEAKING);
             final boolean forcedSneak = wasSneaking && !Collider.canStandUp(player);

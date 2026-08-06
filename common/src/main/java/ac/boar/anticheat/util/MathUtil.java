@@ -65,12 +65,12 @@ public class MathUtil {
     }
 
     public static boolean isValid(final Vector3i vector3i) {
-        return Float.isFinite(vector3i.getX()) && Float.isFinite(vector3i.getY()) &&
+        return vector3i != null && Float.isFinite(vector3i.getX()) && Float.isFinite(vector3i.getY()) &&
                 Float.isFinite(vector3i.getZ());
     }
 
     public static boolean isValid(final Vector3f vector3i) {
-        return Float.isFinite(vector3i.getX()) && Float.isFinite(vector3i.getY()) &&
+        return vector3i != null && Float.isFinite(vector3i.getX()) && Float.isFinite(vector3i.getY()) &&
                 Float.isFinite(vector3i.getZ());
     }
 

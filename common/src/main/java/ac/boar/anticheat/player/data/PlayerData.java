@@ -101,6 +101,9 @@ public class PlayerData {
     public Vec3 input = Vec3.ZERO;
     public Vec3 unvalidatedTickEnd = Vec3.ZERO;
 
+    // true for pre-766 clients - no raw move vector / raw input flags
+    public boolean legacyMovementProtocol;
+
     public Vector certainVelocity;
 
     // Attribute related, abilities
